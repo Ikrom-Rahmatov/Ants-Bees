@@ -449,11 +449,11 @@ class QueenAnt(ScubaThrower):  # You should change this line
         returns None otherwise. Remember to call the construct() method of the superclass!
         """
         # BEGIN Problem 12
-        if QueenAnt.initiated == True:
-            return
-        else:
+        if QueenAnt.initiated == False:
             QueenAnt.initiated = True
             return cls()
+        else:
+            return 
         # END Problem 12
 
     def action(self, gamestate):
