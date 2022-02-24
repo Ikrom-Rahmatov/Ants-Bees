@@ -436,10 +436,14 @@ class QueenAnt(ScubaThrower):  # You should change this line
     is_waterproof = True
     # OVERRIDE CLASS ATTRIBUTES HERE
     # BEGIN Problem 12
-    initiated = False
-    implemented = True   # Change to True to view in the GUI
+    initiated = True
+    implemented = True
+# Change to True to view in the GUI
     def __init__(self, health =1):
         ScubaThrower.__init__(self, health)
+        self.initiated = QueenAnt.initiated
+        if self.initiated :
+            QueenAnt.initiated = False
     # END Problem 12
 
     @classmethod
@@ -453,7 +457,7 @@ class QueenAnt(ScubaThrower):  # You should change this line
             QueenAnt.initiated = True
             return cls()
         else:
-            return 
+            return
         # END Problem 12
 
     def action(self, gamestate):
@@ -461,11 +465,15 @@ class QueenAnt(ScubaThrower):  # You should change this line
         in her tunnel.
         """
         # BEGIN Problem 12
-        new_place = self.place
-        total_damage = 0
-        while new_place:
-            new_place = new_place.exit
-            total_damage = total_damage + new_place.ant.damage
+        if self.initiated:
+            self.reduce_health(self.health)
+        else:
+            ScubaThrower.action(self, gamestate)
+            new_place = self.place
+            total_damage = 0
+            while new_place:
+                new_place = new_place.exit
+                total_damage = total_damage + new_place.ant.damage
         Ant.reduce_health(random_bee(self.place.bees), total_damage)
         # END Problem 12
 
@@ -474,10 +482,13 @@ class QueenAnt(ScubaThrower):  # You should change this line
         remaining, signal the end of the game.
         """
         # BEGIN Problem 12
-        self.reduce_health(amount)
-        if self.health == 0:
-            ants_lose()
-        # END Problem 12
+        if not self.initiated:
+            Insect.reduce_health(self, amount)
+        else:
+            self.health -= amount
+            if self.health <=0:
+                ants_lose()
+        # END Problem 12a
 
 
 class AntRemover(Ant):
